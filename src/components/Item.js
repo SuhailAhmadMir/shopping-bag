@@ -3,7 +3,7 @@ import { makeStyles } from '@material-ui/core/styles'
 import Grid from '@material-ui/core/Grid'
 import Button from '@material-ui/core/Button'
 import TextField from '@material-ui/core/TextField'
-
+import Container from '@material-ui/core/Container'
 import t1 from '../assets/T1.jpg'
 
 const useStyles = makeStyles((theme) => ({
@@ -57,7 +57,7 @@ const Item = () => {
   const classes = useStyles()
 
   return (
-    <div className={classes.root}>
+    <Container className={classes.root}>
       <Grid container className={classes.mainContainer} spacing={1}>
         <Grid item className={classes.gridItem} xs={2}>
           <Grid container direction='column'>
@@ -133,7 +133,7 @@ const Item = () => {
           </Grid>
         </Grid>
       </Grid>
-    </div>
+    </Container>
   )
 }
 
