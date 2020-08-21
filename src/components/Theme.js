@@ -1,11 +1,6 @@
 import { createMuiTheme } from '@material-ui/core/styles'
 
 export default createMuiTheme({
-  //   palette: {
-  //     common: {},
-  //     primary: {},
-  //     secondary: {},
-  //   },
   typography: {
     fontFamily: 'Raleway',
     fontWeight: 700,
