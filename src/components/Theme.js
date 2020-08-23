@@ -26,7 +26,7 @@ export default createMuiTheme({
     lineHeight: 1.167,
   },
   h4: {
-    fontSize: '2.125rem',
+    fontSize: '3rem',
     fontWeight: 400,
     letterSpacing: '0.00735em',
     lineHeight: 1.235,

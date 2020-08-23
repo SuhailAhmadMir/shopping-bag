@@ -13,9 +13,6 @@ import MenuItem from '@material-ui/core/MenuItem'
 import { Divider } from '@material-ui/core'
 import FormControl from '@material-ui/core/FormControl'
 
-import t1 from '../assets/T1.jpg'
-import Modal from './Modal'
-
 const useStyles = makeStyles((theme) => ({
   closeButton: {
     position: 'absolute',
@@ -28,19 +25,22 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     justifyContent: 'space-evenly',
   },
-  gridItem: {},
+
   item: {
     display: 'flex',
-    justifyContent: 'center',
+    justifyContent: 'flex-start',
   },
   name: {
     ...theme.typography.h4,
+    textTransform: 'uppercase',
     marginTop: '0.5rem',
     marginBottom: '0.2rem',
     color: '#37474F',
   },
   style: {
     ...theme.typography.h5,
+    textTransform: 'uppercase',
+
     margin: '0',
     color: '#546E7A',
   },
@@ -48,6 +48,7 @@ const useStyles = makeStyles((theme) => ({
     ...theme.typography.h5,
     margin: '0',
     color: '#546E7A',
+    textTransform: 'uppercase',
   },
   button: {
     ...theme.typography.h5,
@@ -55,18 +56,9 @@ const useStyles = makeStyles((theme) => ({
   },
   label: {
     ...theme.typography,
-    paddingLeft: '1rem',
+    paddingLeft: '-1rem',
   },
 
-  qtyField: {
-    width: '2.5rem',
-    height: '1rem',
-    marginTop: '1rem',
-    marginRight: '1rem',
-  },
-  price: {
-    ...theme.typography.h3,
-  },
   mainOverlayContainer: {
     overflow: 'hidden',
   },
@@ -77,12 +69,13 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: 'center',
     color: '#546E7A',
   },
-  itemName: {},
+  itemName: {
+    textTransform: 'uppercase',
+  },
   priceOverlayItem: {
     ...theme.typography,
     display: 'flex',
     justifyContent: 'center',
-    color: '#37474F',
   },
   prodLabelItem: {
     ...theme.typography,
@@ -98,12 +91,12 @@ const useStyles = makeStyles((theme) => ({
   color1: {
     height: '1rem',
     width: '1rem',
-    backgroundColor: 'red',
+    // backgroundColor: 'red',
   },
   color2: {
     height: '1rem',
     width: '1rem',
-    backgroundColor: 'green',
+    // backgroundColor: 'green',
   },
   sizeQtyItem: {
     display: 'flex',
@@ -141,20 +134,58 @@ const useStyles = makeStyles((theme) => ({
   overlayImage: {
     width: '100%',
     height: '100%',
+    marginTop: '20%',
+  },
+  itemImage: {
+    maxWidth: '100%',
+    height: '100%',
+  },
+  size: {
+    textTransform: 'uppercase',
+    justifyContent: 'center',
+  },
+  qtyFieldContainer: {
+    display: 'flex',
+    justifyContent: 'center',
+  },
+  qtyField: {
+    width: '2.5rem',
+
+    justifyContent: 'flex-end',
+    alighItems: 'center',
+  },
+  price: {
+    ...theme.typography.h3,
+  },
+  pName: {
+    textTransform: 'uppercase',
+  },
+  detailSection: {
+    paddingLeft: '1rem',
+    paddingRiht: '1rem',
+  },
+  crudBtn: {
+    marginLeft: '-1rem',
   },
 }))
 
 // close icon
 
-const Item = () => {
+const Item = (props) => {
   const classes = useStyles()
   const [open, setOpen] = React.useState(false)
   const [fullWidth, setFullWidth] = React.useState(true)
   const [maxWidth, setMaxWidth] = React.useState('sm')
-  const [size, setSize] = React.useState('')
-  const [qty, setQty] = React.useState('')
+  const [size, setSize] = React.useState(
+    `${props.products.p_selected_size.code}`
+  )
+  const [qty, setQty] = React.useState(`${props.products.p_quantity}`)
   const [btnText, setBtnText] = React.useState('EDIT')
+  const [producId, setProductId] = React.useState('')
+
   const handleOpen = () => {
+    setProductId(props.products.p_id)
+
     setOpen(true)
   }
   const handleClose = (e) => {
@@ -170,37 +201,49 @@ const Item = () => {
   const handleAddToBag = () => {
     setBtnText('ADD TO BAG')
   }
+
+  const handleEdit = () => {
+    props.handleEdit(size, producId, qty)
+    setOpen(false)
+  }
+
   return (
     <Container>
-      <Grid container className={classes.mainContainer} spacing={1}>
+      <Grid container className={classes.mainContainer} spacing={2}>
         {/* item image */}
         <Grid item className={classes.gridItem} xs={2}>
           <Grid container direction='column'>
             <Grid item className={classes.item}>
               <img
-                src={t1}
+                src={props.images}
                 alt='solid green cotton shirt'
                 className={classes.itemImage}
+                xs={12}
               />
             </Grid>
           </Grid>
         </Grid>
         {/* item details */}
         <Grid item className={classes.gridItem} xs={5}>
-          <Grid container direction='column'>
+          <Grid container direction='column' className={classes.detailSection}>
             <Grid item className={classes.label}>
-              <h4 className={classes.name}>SOLID GREEN COTTON TSHIRT</h4>
+              <h4 className={classes.name}>
+                {props.products.p_variation}
+                <span style={{ marginLeft: '0.3rem' }}></span>{' '}
+                {props.products.p_name}
+              </h4>
+              <h5 className={classes.style}>
+                Style #: {props.products.p_style}
+              </h5>
+              <h5 className={classes.color}>
+                Colour:{props.products.p_selected_color.name}
+              </h5>
             </Grid>
-            <Grid item className={classes.label}>
-              <h5 className={classes.style}>Style #: MS13KT1906</h5>
-            </Grid>
-            <Grid item className={classes.label}>
-              <h5 className={classes.color}>Colour:Blue</h5>
-            </Grid>
+
             {/*  */}
             <div style={{ marginTop: '2rem' }}></div>
             {/* buttons */}
-            <Grid container>
+            <Grid container className={classes.crudBtn}>
               <Grid item>
                 <Button className={classes.button} onClick={handleOpen}>
                   EDIT
@@ -221,36 +264,49 @@ const Item = () => {
         <Grid item className={classes.gridItem} xs={1}>
           <Grid container direction='column'>
             <Grid item className={classes.label}>
-              <h4 className={classes.size}>S</h4>
+              <h4 className={classes.size}>
+                {props.products.p_selected_size.code}
+              </h4>
             </Grid>
           </Grid>
         </Grid>
         {/* quatity */}
-        <form>
-          <Grid item className={classes.gridItem} xs={2}>
-            <Grid container direction='column'>
-              <Grid item className={classes.qtyFieldContainer}>
-                <TextField
-                  size='small'
-                  disabled
-                  id='qtyField'
-                  label='1'
-                  variant='outlined'
-                  className={classes.qtyField}
-                />
-              </Grid>
+        <Grid item className={classes.gridItem} xs={2}>
+          <Grid container direction='column'>
+            <Grid item className={classes.qtyFieldContainer}>
+              <TextField
+                size='small'
+                disabled
+                id='qtyField'
+                label={props.products.p_quantity}
+                variant='outlined'
+                className={classes.qtyField}
+              />
             </Grid>
           </Grid>
-        </form>
+        </Grid>
         {/* price */}
         <Grid item className={classes.gridItem} xs={2}>
           <Grid container direction='column'>
             <Grid item className={classes.label}>
-              <h3 className={classes.price}>$11.00</h3>
+              <h3 className={classes.price}>${props.products.p_price}.00</h3>
             </Grid>
           </Grid>
         </Grid>
       </Grid>
+
+      {/* divider */}
+
+      <hr
+        style={{
+          marginTop: '3rem',
+          marginBottom: '3rem',
+          marginLeft: '2rem',
+          backgroundColor: '#FAFAFA',
+          color: '#FAFAFA',
+        }}
+      />
+
       {/* dialog */}
       {/*    */}
       <Dialog
@@ -286,7 +342,9 @@ const Item = () => {
                     onClose={handleClose}
                     className={classes.itemName}
                   >
-                    PAISLEY JEAN
+                    {props.products.p_variation}
+                    <span style={{ marginLeft: '0.3rem' }}></span>{' '}
+                    {props.products.p_name}
                   </h4>
                   <IconButton
                     aria-label='close'
@@ -298,7 +356,9 @@ const Item = () => {
                 </Grid>
                 {/* price */}
                 <Grid item className={classes.priceOverlayItem}>
-                  <h2 className={classes.priceOverlayPrice}>$21.00</h2>
+                  <h2 className={classes.priceOverlayPrice}>
+                    ${props.products.p_price}.00
+                  </h2>
                 </Grid>
               </Grid>
               {/* item color */}
@@ -308,12 +368,28 @@ const Item = () => {
                 className={classes.itemColorContainer}
               >
                 <Grid item className={classes.prodLabelItem}>
-                  <h5 className={classes.priceOverlayPrice}>PAISLEY</h5>
+                  <h5 className={classes.pName}>{props.products.p_name}</h5>
                 </Grid>
                 <Grid item className={classes.prodColorItem}>
-                  <div className={classes.color1} />
-                  <span style={{ margin: '0.2rem' }} />
-                  <div className={classes.color2} />
+                  {/* selected color */}
+                  <div
+                    className={classes.color2}
+                    style={{
+                      backgroundColor: `${props.products.p_selected_color.hexcode}`,
+                      border: '3px solid',
+                    }}
+                  />
+
+                  {/* available colors */}
+                  {props.products.p_available_options.colors.map((color) => (
+                    <div
+                      className={classes.color1}
+                      style={{
+                        backgroundColor: `${color.hexcode}`,
+                        marginLeft: '0.8rem',
+                      }}
+                    />
+                  ))}
                 </Grid>
               </Grid>
               {/* size qty */}
@@ -336,15 +412,14 @@ const Item = () => {
                       labelId='demo-simple-select-outlined-label'
                       id='demo-simple-select-outlined'
                       value={size}
-                      onChange={handleSizeChange}
                       label='Size'
+                      onChange={handleSizeChange}
                     >
-                      <MenuItem value=''>
-                        <em>None</em>
-                      </MenuItem>
-                      <MenuItem value={10}>Ten</MenuItem>
-                      <MenuItem value={20}>Twenty</MenuItem>
-                      <MenuItem value={30}>Thirty</MenuItem>
+                      {props.products.p_available_options.sizes.map((item) => {
+                        return (
+                          <MenuItem value={item.code}>{item.code}</MenuItem>
+                        )
+                      })}
                     </Select>
                   </FormControl>
                   <span style={{ margin: '0.2rem' }} />
@@ -364,12 +439,11 @@ const Item = () => {
                       onChange={handleQtyChange}
                       label='Qty'
                     >
-                      <MenuItem value=''>
-                        <em>None</em>
+                      <MenuItem value={props.products.p_quantity}>
+                        {props.products.p_quantity}
                       </MenuItem>
-                      <MenuItem value={10}>Ten</MenuItem>
-                      <MenuItem value={20}>Twenty</MenuItem>
-                      <MenuItem value={30}>Thirty</MenuItem>
+                      <MenuItem value={2}>2</MenuItem>
+                      <MenuItem value={3}>3</MenuItem>
                     </Select>
                   </FormControl>
                 </Grid>
@@ -386,19 +460,20 @@ const Item = () => {
                     variant='contained'
                     color='primary'
                     className={classes.editButton}
+                    onClick={handleEdit}
                   >
                     {btnText}
                   </Button>
                 </Grid>
                 <Grid item className={classes.prodLbl}>
                   <h6>
-                    <a
+                    <span
                       href='#'
-                      style={{ color: '#37474F' }}
+                      style={{ color: '#37474F', cursor: 'pointer' }}
                       onClick={handleAddToBag}
                     >
-                      See product details
-                    </a>
+                      <u>See product details</u>
+                    </span>
                   </h6>
                 </Grid>
               </Grid>
@@ -410,7 +485,7 @@ const Item = () => {
               <Grid container direction='column'>
                 <Grid item className={classes.overlayImageConatiner} xs={12}>
                   <img
-                    src={t1}
+                    src={props.images}
                     alt='solid green cotton shirt'
                     className={classes.overlayImage}
                   />

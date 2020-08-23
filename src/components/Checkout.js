@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import Grid from '@material-ui/core/Grid'
 import Button from '@material-ui/core/Button'
@@ -10,6 +10,7 @@ import lock from '../assets/lock.jpg'
 
 const useStyles = makeStyles((theme) => ({
   mainContainer: {
+    marginTop: '5rem',
     display: 'flex',
     justifyContent: 'space-between',
   },
@@ -43,9 +44,12 @@ const useStyles = makeStyles((theme) => ({
   },
   leftSection: {
     ...theme.typography,
+    paddingLeft: '2rem',
   },
   rightSection: {
     ...theme.typography,
+    width: '100%',
+    paddingLeft: '6rem',
   },
   promoSection: {
     justifyContent: 'space-around',
@@ -95,6 +99,7 @@ const useStyles = makeStyles((theme) => ({
     fontSize: '.89rem',
     color: '#546E7A',
     margin: '1rem',
+    cursor: 'pointer',
   },
   checkoutButton: {
     borderRadius: '0',
@@ -106,21 +111,71 @@ const useStyles = makeStyles((theme) => ({
     alignItems: 'center',
   },
   secureIcon: {
-    marginLeft: '3rem',
+    maxWidth: '100%',
+    height: '100%',
+    display: 'block',
   },
   secureLbl: {
     color: '#546E7A',
   },
+  secureImgLbl: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    color: '#546E7A',
+  },
 }))
 
-const Checkout = () => {
+const Checkout = (props) => {
+  const [discount, setDiscount] = React.useState(0)
+  const [subTotal, setSubTotal] = React.useState(0)
+  const [estimatedTotal, setEstimatedTotal] = React.useState(0)
+
   const classes = useStyles()
+
+  useEffect(() => {
+    let total = 0
+    let estAmount = 0
+    let disAmount = 0
+
+    props.products.forEach((item) => {
+      total += item.p_price
+    })
+
+    setSubTotal(parseInt(total))
+
+    if (props.itemsInCart === 3) {
+      disAmount = subTotal * 0.05
+      setDiscount(disAmount)
+    } else if (props.itemsInCart > 3 && props.itemsInCart <= 10) {
+      console.log('subtotal in >3', subTotal)
+      disAmount = total * 0.01
+      setDiscount(disAmount)
+    } else if (props.itemsInCart > 10) {
+      disAmount = subTotal * 0.25
+      setDiscount(disAmount)
+    }
+
+    estAmount = total - disAmount
+
+    setEstimatedTotal(estAmount)
+    //eslint-disable-next-line
+  }, [])
 
   return (
     <Container>
-      <Grid container className={classes.mainContainer} spacing={1}>
+      <Divider
+        variant='fullWidth'
+        style={{
+          height: '0.5rem',
+          marginLeft: '2rem',
+          marginTop: '-3rem',
+          marginBottom: '',
+        }}
+      />
+      <Grid container className={classes.mainContainer}>
         {/* left section */}
-        <Grid item className={classes.leftSection} xs={2}>
+        <Grid item className={classes.leftSection} xs={3}>
           {/* need help or have questions  section */}
           <Grid container direction='column'>
             <Grid item className={classes.sideLabel1}>
@@ -145,7 +200,7 @@ const Checkout = () => {
           </Grid>
         </Grid>
         {/* right section */}
-        <Grid item xs={9} className={classes.rightSection}>
+        <Grid item className={classes.rightSection} xs={9}>
           {/* enter promo section */}
           <Grid container className={classes.promoSection}>
             <Grid item xs={3} className={classes.promoLabel}>
@@ -182,7 +237,7 @@ const Checkout = () => {
               <h5>SUBTOTAL</h5>
             </Grid>
             <Grid item xs={3} className={classes.subtotalPrice}>
-              <h4>$37.00</h4>
+              <h4>${subTotal}.00</h4>
             </Grid>
           </Grid>
 
@@ -194,7 +249,7 @@ const Checkout = () => {
               </h5>
             </Grid>
             <Grid item xs={3} className={classes.subtotalPrice}>
-              <h4>-$7.00</h4>
+              <h4>-${discount}</h4>
             </Grid>
           </Grid>
 
@@ -225,7 +280,7 @@ const Checkout = () => {
               </h6>
             </Grid>
             <Grid item xs={3} className={classes.subtotalPrice}>
-              <h3>$30.00</h3>
+              <h3>${estimatedTotal}</h3>
             </Grid>
           </Grid>
           {/* divider */}
@@ -239,9 +294,9 @@ const Checkout = () => {
           <Grid container className={classes.cocSection}>
             <Grid item xs={5}></Grid>
             <Grid item xs={3} className={classes.fieldItem}>
-              <a href='#' className={classes.contShopLabel}>
-                CONTINUE SHOPPING
-              </a>
+              <span className={classes.contShopLabel}>
+                <u>CONTINUE SHOPPING</u>
+              </span>
             </Grid>
             <Grid item xs={4} className={classes.fieldButton}>
               <Button
@@ -249,6 +304,7 @@ const Checkout = () => {
                 variant='contained'
                 color='primary'
                 size='small'
+                // onClick={calculateDiscount}
               >
                 CHECKOUT
               </Button>
@@ -256,21 +312,21 @@ const Checkout = () => {
           </Grid>
           {/* secure checkout */}
           <Grid container className={classes.secureSection}>
-            <Grid item xs={5}></Grid>
+            <Grid item xs={4}></Grid>
 
-            <Grid item xs={1}>
+            <Grid item xs={8} className={classes.secureImgLbl}>
               <img
                 src={lock}
                 alt='secure checkout'
                 className={classes.secureIcon}
+                xs={12}
               />
-            </Grid>
-            <Grid item xs={6} className={classes.secureLbl}>
               <h5>Secure checkout. Shopping is always safe & secure</h5>
             </Grid>
           </Grid>
           {/*  */}
         </Grid>
+        {/* ---------------------------------------------------------------- */}
       </Grid>
     </Container>
   )
