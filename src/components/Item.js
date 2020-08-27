@@ -357,6 +357,7 @@ const Item = (props) => {
                     label={props.products.p_quantity}
                     variant="outlined"
                     className={classes.qtyField}
+                    style={{ marginTop: "-9px" }}
                   />
                 </Grid>
                 <Grid item>
