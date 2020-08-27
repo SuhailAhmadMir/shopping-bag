@@ -98,6 +98,10 @@ const useStyles = makeStyles((theme) => ({
   cocSection: {
     justifyContent: "space-evenly",
     margin: "1rem",
+    [theme.breakpoints.down("xs")]: {
+      justifyContent: "center",
+      alignItems: "center",
+    },
   },
   contShopLabel: {
     fontSize: ".89rem",
@@ -108,6 +112,11 @@ const useStyles = makeStyles((theme) => ({
   checkoutButton: {
     borderRadius: "0",
     padding: "0.7rem 1.5rem",
+    [theme.breakpoints.down("xs")]: {
+      paddingLeft: "5rem",
+      paddingRight: "5rem",
+      marginRight: "5rem",
+    },
     // marginLeft: '12%',
   },
   secureSection: {
@@ -120,7 +129,12 @@ const useStyles = makeStyles((theme) => ({
     display: "block",
   },
   secureLbl: {
-    color: "#546E7A",
+    color: "#B0BEC5",
+    paddingLeft: "-3rem",
+    [theme.breakpoints.down("xs")]: {
+      textAlign: "center",
+      paddingRight: "2rem",
+    },
   },
   secureImgLbl: {
     display: "flex",
@@ -154,6 +168,28 @@ const useStyles = makeStyles((theme) => ({
   dollarSign: {
     ...theme.typography,
     fontSize: "0.6rem",
+  },
+  contLbl: {
+    [theme.breakpoints.down("xs")]: {
+      fontSize: ".7rem",
+      marginRight: "5rem",
+    },
+  },
+  signInLbl: {
+    color: "#78909C",
+    paddingLeft: "-3rem",
+    [theme.breakpoints.down("xs")]: {
+      textAlign: "left",
+      paddingRight: "2rem",
+    },
+  },
+  topDivider: {
+    height: "0.5rem",
+    marginLeft: "2rem",
+    marginTop: "-3rem",
+    [theme.breakpoints.down("xs")]: {
+      marginTop: "0",
+    },
   },
 }));
 
@@ -257,15 +293,7 @@ const Checkout = (props) => {
 
   return (
     <Grid container className={classes.mainContainer} spacing={4}>
-      <Divider
-        variant="fullWidth"
-        style={{
-          height: "0.5rem",
-          marginLeft: "2rem",
-          marginTop: "-3rem",
-          marginBottom: "",
-        }}
-      />
+      <Divider variant="fullWidth" className={classes.topDivider} />
       {/* left section */}
       {leftSectionMatches ? null : leftSection}
       {/* right section */}
@@ -283,9 +311,7 @@ const Checkout = (props) => {
             xs={useMediaQuery(theme.breakpoints.down("xs")) ? 12 : 3}
             className={classes.promoLabel}
           >
-            <h4 style={{ textAlign: "center" }}>
-              ENTER PROMOTION CODE OR GIFT CARD
-            </h4>
+            <h4>ENTER PROMOTION CODE OR GIFT CARD</h4>
           </Grid>
 
           {useMediaQuery(theme.breakpoints.down("xs")) ? (
@@ -388,40 +414,87 @@ const Checkout = (props) => {
         </Grid>
         {/* checkout | continue section */}
 
-        <Grid container className={classes.cocSection}>
+        <Grid
+          container
+          className={classes.cocSection}
+          direction={
+            useMediaQuery(theme.breakpoints.down("xs"))
+              ? "column-reverse"
+              : "row"
+          }
+        >
           <Grid item xs={5}></Grid>
-          <Grid item xs={3} className={classes.fieldItem}>
+          <Grid
+            item
+            xs={useMediaQuery(theme.breakpoints.down("xs")) ? 12 : 3}
+            className={classes.fieldItem}
+          >
             <span className={classes.contShopLabel}>
-              <u>CONTINUE SHOPPING</u>
+              <u className={classes.contLbl}>CONTINUE SHOPPING</u>
             </span>
           </Grid>
-          <Grid item xs={4} className={classes.fieldButton}>
+          <Grid
+            item
+            xs={useMediaQuery(theme.breakpoints.down("xs")) ? 12 : 4}
+            className={classes.fieldButton}
+          >
             <Button
               className={classes.checkoutButton}
               variant="contained"
               color="primary"
-              size="small"
-              // onClick={calculateDiscount}
+              size={
+                useMediaQuery(theme.breakpoints.down("xs")) ? "large" : "small"
+              }
             >
               CHECKOUT
             </Button>
           </Grid>
         </Grid>
         {/* secure checkout */}
-        <Grid container className={classes.secureSection}>
+        <Grid
+          container
+          spacing={0}
+          className={classes.secureSection}
+          justify="flex-start"
+          direction={
+            useMediaQuery(theme.breakpoints.down("xs"))
+              ? "column-reverse"
+              : "row"
+          }
+        >
           <Grid item xs={4}></Grid>
-
-          <Grid item xs={8} className={classes.secureImgLbl}>
+          <Grid
+            item
+            xs={useMediaQuery(theme.breakpoints.down("xs")) ? 12 : 1}
+            className={classes.secureImgLbl}
+          >
             <img
               src={lock}
               alt="secure checkout"
               className={classes.secureIcon}
-              xs={12}
             />
-            <h5>Secure checkout. Shopping is always safe & secure</h5>
+          </Grid>
+          <Grid item xs={useMediaQuery(theme.breakpoints.down("xs")) ? 12 : 6}>
+            <h5 className={classes.secureLbl}>
+              Secure checkout. Shopping is always safe & secure
+            </h5>
           </Grid>
         </Grid>
         {/*  */}
+        {/* if xs screen then render */}
+        {useMediaQuery(theme.breakpoints.down("xs")) ? (
+          <Grid container direction="column">
+            <Grid item>
+              <Divider variant="center" className={classes.divider} />
+            </Grid>
+            <Grid item>
+              <h5 className={classes.signInLbl}>
+                <u>SIGN IN</u> to save your cart and have access to your items
+                on mobile, tablet, and desktop.
+              </h5>
+            </Grid>
+          </Grid>
+        ) : null}
       </Grid>
       {/* ---------------------------------------------------------------- */}
     </Grid>

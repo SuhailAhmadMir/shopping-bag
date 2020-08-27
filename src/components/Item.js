@@ -145,16 +145,28 @@ const useStyles = makeStyles((theme) => ({
   size: {
     textTransform: "uppercase",
     justifyContent: "center",
+    [theme.breakpoints.down("xs")]: {
+      ...theme.typography,
+      color: "#546E7A",
+      fontSize: "0.9rem",
+      fontWeight: theme.typography.fontWeightRegular,
+    },
   },
   qtyFieldContainer: {
     display: "flex",
     justifyContent: "center",
+    [theme.breakpoints.down("xs")]: {
+      justifyContent: "flex-start",
+    },
   },
   qtyField: {
     width: "2.5rem",
-
     justifyContent: "flex-end",
     alighItems: "center",
+    [theme.breakpoints.down("xs")]: {
+      width: "2rem",
+      borderRadius: "0",
+    },
   },
   price: {
     ...theme.typography.h3,
@@ -168,14 +180,16 @@ const useStyles = makeStyles((theme) => ({
   },
   crudBtn: {
     marginLeft: "-1rem",
+    [theme.breakpoints.down("xs")]: {
+      justifyContent: "center",
+      marginLeft: "1rem",
+    },
   },
   dollarSign: {
     ...theme.typography,
     fontSize: "0.6rem",
   },
 }));
-
-// close icon
 
 const Item = (props) => {
   const classes = useStyles();
@@ -220,24 +234,96 @@ const Item = (props) => {
       <sup className={classes.dollarSign}>$</sup>
     </React.Fragment>
   );
+
+  // buttons definition
+  const crudButtons = (
+    <Grid
+      container
+      className={classes.crudBtn}
+      // xs={useMediaQuery(theme.breakpoints.down("xs")) ? 12 : 5}
+    >
+      <Grid item>
+        <Button className={classes.button} onClick={handleOpen}>
+          EDIT
+        </Button>
+        <span>{"|"}</span>
+      </Grid>
+      <Grid item>
+        <Button className={classes.button}> X REMOVE </Button>
+        <span>{"|"}</span>
+      </Grid>
+      <Grid item>
+        <Button className={classes.button}> SAVE FOR LATER</Button>
+      </Grid>
+    </Grid>
+  );
+
+  // size qty price
+  const sizeQtyPrice = (
+    <React.Fragment>
+      <Grid item className={classes.gridItem} xs={1}>
+        <Grid container direction="column">
+          <Grid item className={classes.label}>
+            <h4 className={classes.size}>
+              {props.products.p_selected_size.code}
+            </h4>
+          </Grid>
+        </Grid>
+      </Grid>
+      {/* quatity */}
+      <Grid item className={classes.gridItem} xs={2}>
+        <Grid container direction="column">
+          <Grid item className={classes.qtyFieldContainer}>
+            <TextField
+              size="small"
+              disabled
+              id="qtyField"
+              label={props.products.p_quantity}
+              variant="outlined"
+              className={classes.qtyField}
+            />
+          </Grid>
+        </Grid>
+      </Grid>
+      {/* price */}
+      <Grid item className={classes.gridItem} xs={2}>
+        <Grid container direction="column">
+          <Grid item className={classes.label}>
+            <h3 className={classes.price}>
+              {dollar}
+              {props.products.p_price}.00
+            </h3>
+          </Grid>
+        </Grid>
+      </Grid>
+    </React.Fragment>
+  );
+
   return (
     <Container>
       <Grid container className={classes.mainContainer} spacing={2}>
         {/* item image */}
-        <Grid item className={classes.gridItem} xs={2}>
+        <Grid
+          item
+          className={classes.gridItem}
+          xs={useMediaQuery(theme.breakpoints.down("xs")) ? 6 : 2}
+        >
           <Grid container direction="column">
             <Grid item className={classes.item}>
               <img
                 src={props.images}
                 alt="solid green cotton shirt"
                 className={classes.itemImage}
-                xs={12}
               />
             </Grid>
           </Grid>
         </Grid>
         {/* item details */}
-        <Grid item className={classes.gridItem} xs={5}>
+        <Grid
+          item
+          className={classes.gridItem}
+          xs={useMediaQuery(theme.breakpoints.down("xs")) ? 6 : 5}
+        >
           <Grid container direction="column" className={classes.detailSection}>
             <Grid item className={classes.label}>
               <h4 className={classes.name}>
@@ -253,70 +339,57 @@ const Item = (props) => {
               </h5>
             </Grid>
 
+            {/* for xs screen render size qty price here */}
+            {useMediaQuery(theme.breakpoints.down("xs")) ? (
+              <Grid container direction="column">
+                <Grid item>
+                  <h5 className={classes.size}>
+                    Size: {props.products.p_selected_size.code}
+                  </h5>
+                </Grid>
+
+                <Grid item className={classes.qtyFieldContainer}>
+                  <h5 className={classes.style}>QTY: </h5>
+                  <TextField
+                    size="small"
+                    disabled
+                    id="qtyField"
+                    label={props.products.p_quantity}
+                    variant="outlined"
+                    className={classes.qtyField}
+                  />
+                </Grid>
+                <Grid item>
+                  <Grid item className={classes.label}>
+                    <h3 className={classes.price}>
+                      {dollar}
+                      {props.products.p_price}.00
+                    </h3>
+                  </Grid>
+                </Grid>
+              </Grid>
+            ) : null}
+
             {/*  */}
             <div style={{ marginTop: "2rem" }}></div>
             {/* buttons */}
-            <Grid container className={classes.crudBtn}>
-              <Grid item>
-                <Button className={classes.button} onClick={handleOpen}>
-                  EDIT
-                </Button>
-                <span>{"|"}</span>
-              </Grid>
-              <Grid item>
-                <Button className={classes.button}> X REMOVE </Button>
-                <span>{"|"}</span>
-              </Grid>
-              <Grid item>
-                <Button className={classes.button}> SAVE FOR LATER</Button>
-              </Grid>
-            </Grid>
+            {useMediaQuery(theme.breakpoints.down("xs")) ? null : crudButtons}
+            {/* end button */}
           </Grid>
         </Grid>
-        {/* size */}
-        <Grid item className={classes.gridItem} xs={1}>
-          <Grid container direction="column">
-            <Grid item className={classes.label}>
-              <h4 className={classes.size}>
-                {props.products.p_selected_size.code}
-              </h4>
-            </Grid>
-          </Grid>
-        </Grid>
-        {/* quatity */}
-        <Grid item className={classes.gridItem} xs={2}>
-          <Grid container direction="column">
-            <Grid item className={classes.qtyFieldContainer}>
-              <TextField
-                size="small"
-                disabled
-                id="qtyField"
-                label={props.products.p_quantity}
-                variant="outlined"
-                className={classes.qtyField}
-              />
-            </Grid>
-          </Grid>
-        </Grid>
-        {/* price */}
-        <Grid item className={classes.gridItem} xs={2}>
-          <Grid container direction="column">
-            <Grid item className={classes.label}>
-              <h3 className={classes.price}>
-                {dollar}
-                {props.products.p_price}.00
-              </h3>
-            </Grid>
-          </Grid>
-        </Grid>
-        {/* end of price */}
+        {/* size  qty price */}
+        {useMediaQuery(theme.breakpoints.down("xs")) ? null : sizeQtyPrice}
+        {/* end of size qty price */}
+
+        {/* for xs screen render buttons here */}
+        {useMediaQuery(theme.breakpoints.down("xs")) ? crudButtons : null}
       </Grid>
 
       {/* divider */}
 
       <hr
         style={{
-          marginTop: "3rem",
+          marginTop: "1rem",
           marginBottom: "3rem",
           marginLeft: "2rem",
           backgroundColor: "#FAFAFA",
@@ -324,7 +397,7 @@ const Item = (props) => {
         }}
       />
 
-      {/* dialog */}
+      {/* ----------------------------dialog ----------------------------------------------*/}
       {/*    */}
       <Dialog
         fullWidth={fullWidth}

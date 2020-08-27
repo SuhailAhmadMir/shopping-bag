@@ -1,7 +1,7 @@
 import React from "react";
 import Grid from "@material-ui/core/Grid";
 import { makeStyles } from "@material-ui/core/styles";
-import { Divider } from "@material-ui/core";
+import { Divider, Container } from "@material-ui/core";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 import { useTheme } from "@material-ui/core/styles";
 
@@ -38,7 +38,16 @@ const useStyles = makeStyles((theme) => ({
       fontWeight: theme.typography.fontWeightBold,
     },
     [theme.breakpoints.down("xs")]: {
-      fontSize: "1.6rem",
+      fontSize: "1.5rem",
+      marginLeft: "-1rem",
+      paddingRight: "1rem",
+    },
+  },
+  itemsInCartLbl: {
+    [theme.breakpoints.down("xs")]: {
+      ...theme.typography,
+      fontSize: "1rem",
+      fontWeight: theme.typography.fontWeightMedium,
     },
   },
 }));
@@ -107,11 +116,29 @@ const Header = (props) => {
     </React.Fragment>
   );
   return (
-    <React.Fragment>
+    <Container style={{ paddingLeft: "1rem" }}>
       <div classnme={classes.mainLbl}>
         <span className={classes.headerLabel}>YOUR SHOPPING BAG</span>
+        {useMediaQuery(theme.breakpoints.down("xs")) ? (
+          <React.Fragment>
+            <span classname={classes.itemsInCartLbl}>
+              {props.numberOfProducts} ITEMS
+            </span>
+          </React.Fragment>
+        ) : null}
       </div>
-
+      {useMediaQuery(theme.breakpoints.down("xs")) ? (
+        <React.Fragment>
+          <Divider
+            variant="fullWidth"
+            style={{
+              marginTop: "2rem",
+              height: "0.3rem",
+              marginLeft: "2rem",
+            }}
+          />
+        </React.Fragment>
+      ) : null}
       <Divider
         variant="fullWidth"
         style={{
@@ -121,7 +148,7 @@ const Header = (props) => {
         }}
       />
       {matches ? null : header}
-    </React.Fragment>
+    </Container>
   );
 };
 
